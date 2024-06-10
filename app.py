@@ -20,11 +20,12 @@ def home():
 def predict():
     try:
         # Obtener los datos enviados en el request
-        abdomen = float(request.form['abdomen'])
-        antena = float(request.form['antena'])
+        majorLength = float(request.form['MajorAxisLength'])
+        minorLength = float(request.form['MinorAxisLength'])
+        perimetro = float(request.form['Perimeter'])
         
         # Crear un DataFrame con los datos
-        data_df = pd.DataFrame([[abdomen, antena]], columns=['abdomen', 'antena'])
+        data_df = pd.DataFrame([[majorLength, minorLength, perimetro]], columns=['MajorAxisLength', 'MinorAxisLength', 'Perimeter'])
         app.logger.debug(f'DataFrame creado: {data_df}')
         
         # Realizar predicciones
