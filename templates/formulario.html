@@ -1,48 +1,47 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Clasificador de Insectos</title>
-    <script>
-        function clasificarInsecto(event) {
-            event.preventDefault();
-            const majorLength = document.getElementById('majorLength').value;
-            const minorLength = document.getElementById('minorLength').value;
-            const perimetro = document.getElementById('perimetro').value;
-
-            fetch('/predict', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `MajorAxisLength=${majorLength}&MinorAxisLength=${minorLength}&Perimeter=${perimetro}`,
-                /* body: `abdomen=${abdomen}&antena=${antena}`, */
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    document.getElementById('resultado').innerText = 'Error: ' + data.error;
-                } else {
-                    document.getElementById('resultado').innerText = 'La pasa es una ' + data.categoria;
-                }
-            })
-            .catch(error => {
-                document.getElementById('resultado').innerText = 'Error en la solicitud.';
-                console.error('Error:', error);
-            });
-        }
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Prediction</title>
 </head>
 <body>
-    <h1>Clasificador de Pasas</h1>
-    <form id="formulario" onsubmit="clasificarInsecto(event)">
-        <label for="majorLength">Mayor longitud:</label>
-        <input type="text" id="majorLength" name="majorLength"><br><br>
-        <label for="minorLength">Menor Longitud:</label>
-        <input type="text" id="minorLength" name="minorLength"><br><br>
-        <label for="perimetro">Perimetro:</label>
-        <input type="text" id="perimetro" name="perimetro"><br><br>
-        <input type="submit" value="Enviar">
+    <h1>Predict Concrete Strength</h1>
+    <form action="/predict" method="post">
+        <label for="age">Age:</label>
+        <input type="text" id="age" name="age" required><br>
+
+        <label for="cement">Cement:</label>
+        <input type="text" id="cement" name="cement" required><br>
+
+        <label for="superplasticizer">Superplasticizer:</label>
+        <input type="text" id="superplasticizer" name="superplasticizer" required><br>
+
+        <label for="fineaggregate">Fine Aggregate:</label>
+        <input type="text" id="fineaggregate" name="fineaggregate" required><br>
+
+        <label for="flyash">Flyash:</label>
+        <input type="text" id="flyash" name="flyash" required><br>
+
+        <button type="submit">Predict</button>
     </form>
-    <p id="resultado"></p>
+
+    <div id="result"></div>
+
+    <script>
+        const form = document.querySelector('form');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(form);
+            const response = await fetch('/predict', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            document.getElementById('result').innerText = `Prediction: ${result.prediction || result.error}`;
+        }
+    </script>
 </body>
 </html>
