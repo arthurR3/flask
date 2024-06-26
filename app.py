@@ -4,7 +4,7 @@ import joblib
 
 app = Flask(__name__)
 
-# Cargar el modelo y el scaler
+# Cargar el modelo
 model = joblib.load('modelo.pkl')
 
 @app.route('/')
@@ -16,16 +16,14 @@ def predict():
     try:
         # Obtener datos del formulario
         data = request.form.to_dict(flat=True)
-        age = float(data['age'])
-        cement = float(data['cement'])
-        superplasticizer = float(data['superplasticizer'])
-        fineaggregate = float(data['fineaggregate'])
-        flyash = float(data['flyash'])
+        high = float(data['high'])
+        low = float(data['low'])
+        gdx_open = float(data['gdx_open'])
+        close = float(data['close'])
+        eg_low = float(data['eg_low'])
 
         # Crear un array numpy con los datos
-        input_data = np.array([[age, cement, superplasticizer, fineaggregate, flyash]])
-
-        # Estandarizar los datos
+        input_data = np.array([[high, low, gdx_open, close, eg_low]])
 
         # Realizar la predicción
         prediction = model.predict(input_data)
